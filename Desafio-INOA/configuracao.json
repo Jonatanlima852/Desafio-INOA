@@ -1,0 +1,10 @@
+{
+	"Host": "smtp.gmail.com",
+	"Username": "jonatanlima852@gmail.com",
+	"Password": "59943f59943F@",
+	"Port": 587,
+	"Emails": [
+		"santosjonatan852@gmail.com",
+		"principalparaocanal@gmail.com"
+	]
+}

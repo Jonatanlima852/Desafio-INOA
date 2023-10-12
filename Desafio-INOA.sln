@@ -3,7 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Desafio-INOA", "Desafio-INOA\Desafio-INOA.csproj", "{63FC415A-1670-4BA8-877F-7766AB186DF0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Desafio-INOA", "Desafio-INOA\Desafio-INOA.csproj", "{63FC415A-1670-4BA8-877F-7766AB186DF0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Config", "Config", "{E98D4703-A863-4530-A79B-055E56EB26F6}"
+	ProjectSection(SolutionItems) = preProject
+		configuracao.json = configuracao.json
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
