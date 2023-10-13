@@ -10,6 +10,7 @@ using System.Text.Json.Nodes;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json.Serialization;
 using Newtonsoft.Json;
+using System.Net.Http;
 
 namespace Desafio_INOA
 {
@@ -28,6 +29,11 @@ namespace Desafio_INOA
 
         public List<string> EmailsDestino { get; set; }
 
+        // Crie uma instância da classe SmtpClient
+        private SmtpClient client = new SmtpClient();
+        public string Usermame { get; set; }
+        // public MailAddress Username { get; private set; }
+
         public LeituraEmails(string arquivo)
         {
             
@@ -45,25 +51,43 @@ namespace Desafio_INOA
                 string json = configFile.ReadToEnd();
                 ConfigSMTP config = JsonConvert.DeserializeObject<ConfigSMTP>(json);
 
-
-                // Crie uma instância da classe SmtpClient
-                SmtpClient client = new SmtpClient();
-
-                // Especifique seu host de correspondência, nome de usuário, senha, número da porta e opção de segurança
-                // client.Host = "mail.server.com";
-                // client.Credentials = new NetworkCredential("seuemail@gmail.com", "suasenha");
-                // client.Port = 587;
-
-                List<string> emails = config.Emails;
-
+                this.Usermame = config.Username;
                 client.Host = config.Host;
                 client.Credentials = new NetworkCredential(config.Username, config.Password);
                 client.EnableSsl = true; // Use SSL para conexão segura
                 client.Port = config.Port;
-                this.EmailsDestino = emails;
+                this.EmailsDestino = config.Emails;
             }
 
         }
 
+        public void EnviarEmails(List<string> emails)
+        {
+            foreach(string email in emails)
+            {
+                MailAddress fromAddress = new MailAddress(this.Usermame);
+                MailAddress toAddress = new MailAddress(email);
+                using (var message = new MailMessage(fromAddress, toAddress)
+                {
+                    Subject = "Email teste",
+                    Body = "Esse é um email teste",
+                    IsBodyHtml = false
+
+
+                })
+                {
+                    using (var newClient = new SmtpClient
+                    {
+                        Credentials = this.client.Credentials,
+                        Host = this.client.Host,
+                        Port = this.client.Port,
+                        EnableSsl = this.client.EnableSsl
+                    })
+                    {
+                        newClient.Send(message);
+                    }
+                }
+            }
+        }
     }
 }

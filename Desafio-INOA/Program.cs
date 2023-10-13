@@ -17,15 +17,30 @@ class Program
 
         string nomeArquivoConfig = "C:\\Users\\Jonatan\\source\\repos\\Desafio-INOA\\configuracao.json";
 
+        string nomeAtivo = "EMBR3.SA";
+        double limiteInf = 17.0;
+        double limiteSup = 17.2;
         //string nomeArquivoConfig = args[0]; // O primeiro argumento é o nome do arquivo.
         //int limiteInf = int.Parse(args[1]); // O segundo argumento é o preço inferior
         //int limiteSup = int.Parse(args[2]); // O terceiro argumento é o preço superior
 
         // Crie uma instância de LeituraEmails passando o nome do arquivo de configuração.
-        LeituraEmails leitor = new LeituraEmails(nomeArquivoConfig);
+        LeituraEmails sistemaEmail = new LeituraEmails(nomeArquivoConfig);
+
+        MonitorarAtivo ativo = new MonitorarAtivo(nomeAtivo, limiteInf, limiteSup);
+
+        while (true)
+        {
+            if(ativo.AbaixoInf() || ativo.AcimaSup())
+            {
+                sistemaEmail.EnviarEmails(sistemaEmail.EmailsDestino);
+            }
+            Thread.Sleep(60000 * 20); // Espera 20 minuto antes de verificar novamente
+        }
+
 
         // Agora você pode acessar a propriedade EmailsDestino na instância leitor.
-        foreach (string email in leitor.EmailsDestino)
+        foreach (string email in sistemaEmail.EmailsDestino)
         {
             Console.WriteLine("Email de destino: " + email);
         }
