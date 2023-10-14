@@ -14,18 +14,8 @@ using System.Net.Http;
 
 namespace Desafio_INOA
 {
-    internal class LeituraEmails
+    internal class EnvioDeEmails
     {
-
-        public class ConfigSMTP
-        {
-
-            public string Host { get; set; }
-            public string Username { get; set; }
-            public string Password { get; set; }
-            public int Port { get; set; }
-            public List<string> Emails { get; set; }
-        }
 
         public List<string> EmailsDestino { get; set; }
 
@@ -34,7 +24,7 @@ namespace Desafio_INOA
         public string Usermame { get; set; }
         // public MailAddress Username { get; private set; }
 
-        public LeituraEmails(string arquivo)
+        public EnvioDeEmails(string arquivo)
         {
             
             if(!File.Exists(arquivo))
@@ -45,6 +35,11 @@ namespace Desafio_INOA
                 return;
             }
 
+            // código obtido a partir do site da API
+            // site Microsoft: https://learn.microsoft.com/en-us/dotnet/api/system.net.mail.smtpclient.-ctor?view=net-7.0
+            // Código para estabelecer os parâmetros gerais de conexão com a API 
+            // Parâmetros gerais: host(email smtp), Credenciais(email e senha do usuário), porta e certififcado SSL
+            // Parâmetros obtidos a partir do arquivo json de entrada
             using (Stream entrada = File.Open(arquivo, FileMode.Open))
             using (StreamReader configFile = new StreamReader(entrada))
             {
@@ -61,20 +56,34 @@ namespace Desafio_INOA
 
         }
 
-        public void EnviarEmails(List<string> emails)
+        public void EnviarEmails(List<string> emails, double preco, string acao)
         {
             foreach(string email in emails)
             {
+                // verificação se está abaixo ou acima do preço
+                string situacao = "";
+                if (acao == "comprar")
+                {
+                    situacao = "abaixo";
+                } 
+                if(acao == "vender")
+                {
+                    situacao = "acima";
+                } 
+                // Código para envio de email, obtido a  partir do site da API
                 Console.WriteLine($" enviando´email para {email}");
                 MailAddress fromAddress = new MailAddress(this.Usermame);
                 MailAddress toAddress = new MailAddress(email);
                 using (var message = new MailMessage(fromAddress, toAddress)
                 {
-                    Subject = "Email teste",
-                    Body = "Esse é um email teste",
+                    Subject = "Alerta de mudança no ativo",
+                    Body = "O preço da ação está em " + preco.ToString() + 
+                    ", portanto, " + situacao + " do preço limite, " +
+                    "de maneira que a ação recomendada é: " + acao.ToUpper() +"!",
                     IsBodyHtml = false
                 })
                 {
+                    // código para criar um novo cliente e fechá-lo ao fim  do envio de email
                     using (var newClient = new SmtpClient
                     {
                         UseDefaultCredentials = false,
@@ -84,15 +93,21 @@ namespace Desafio_INOA
                         EnableSsl = this.client.EnableSsl
                     })
                     {
-                        Console.WriteLine(this.client.Credentials);
-                        Console.WriteLine(this.client.Host);
-                        Console.WriteLine(this.client.Port);
-                        Console.WriteLine(this.client.EnableSsl);
-
                         newClient.Send(message);
                     }
                 }
             }
+        }
+
+        // Classe para desserializar o json de configuração de forma simplificada
+        public class ConfigSMTP
+        {
+
+            public string Host { get; set; }
+            public string Username { get; set; }
+            public string Password { get; set; }
+            public int Port { get; set; }
+            public List<string> Emails { get; set; }
         }
     }
 }

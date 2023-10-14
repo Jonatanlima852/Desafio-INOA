@@ -13,73 +13,38 @@ namespace Desafio_INOA
         private string ApiKey { get; set; }
         private double CotacaoInf { get; set; }
         private double CotacaoSup { get; set; }
-        private double Preco { get; set; }
+        public double Preco { get; set; }
 
         public MonitorarAtivo(string ativo, double inf, double sup)
         {
             // Colocando os valores sup e inf no constructor 
             this.CotacaoInf = inf;
             this.CotacaoSup = sup;
-            // Conexão com a API de monitoramento de ativos - 
 
-            //string QUERY_URL = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol="+ ativo +"&apikey=C2Q5WR4W8X2UJ4QT";
-            string QUERY_URL = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=IBM&apikey=demo";
+
+            // Conexão com a API de monitoramento de ativos
+            string QUERY_URL = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol="+ ativo +"&apikey=C2Q5WR4W8X2UJ4QT";
+           
+            // Query teste a seguir, sem apiKey
+            //string QUERY_URL = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=IBM&apikey=demo";
             Uri queryUri = new Uri(QUERY_URL);
-
 
             using (WebClient client = new WebClient())
             {
-                //JavaScriptSerializer js = new JavaScriptSerializer();
-                //dynamic json_data = js.Deserialize(client.DownloadString(queryUri), typeof(object));
-
-                //Dictionary<string, object> json_data = JsonSerializer.Deserialize<Dictionary<string, dynamic>>(client.DownloadString(queryUri));
+                // Código obtido a partir do site da API.
+                // Site encontrado em:https://www.alphavantage.co/documentation/
                 dynamic json_data = JsonSerializer.Deserialize<Dictionary<string, dynamic>>(client.DownloadString(queryUri));
-                Console.WriteLine("json data:" + json_data);
 
-                //string cotacaoAtivo = json_data["Global Quote"]["05. price"];
-
-                // if (json_data.TryGetValue("Global Quote", out var globalQuote) && globalQuote is Dictionary<string, object> globalQuoteDict)
-                // {
-                //    if (globalQuoteDict.TryGetValue("05. price", out var price))
-                //    {
-                //        if (price is string priceString)
-                //        {
-                //            string cotacaoAtivo = priceString;
-                //            // Agora você tem o valor da cotação em 'cotacaoAtivo'
-                //        }
-                //    }
-                //}
-
-                // Suponha que 'json_data' seja seu objeto dynamic
-                //string cotacaoAtivo = json_data["Global Quote"]["05. price"].ToString();
                 string cotacaoAtivo = json_data["Global Quote"].GetProperty("05. price").GetString();
-                // string cotacaoAtivo = json_data.GetProperty("Global Quote").GetProperty("05. price").GetString();
 
-                //Console.WriteLine(cotacaoAtivo); if (json_data.TryGetValue("Global Quote", out var globalQuote) && globalQuote is Dictionary<string, object> globalQuoteDict)
-                //{
-                //    if (globalQuoteDict.TryGetValue("05. price", out var price))
-                //    {
-                //        if (price is string priceString)
-                //        {
-                //            string cotacaoAtivo = priceString;
-                //            Console.WriteLine("Cotacao:" + cotacaoAtivo);
-                //            this.Preco = Convert.ToDouble(cotacaoAtivo);
-                //            // Agora você tem o valor da cotação em 'cotacaoAtivo'
-                //        }
-                //    }
-                //}
-
+                // Transformando o texto para double independente da linguagem do visual studio (código obtido pelo chatGPT)
                 this.Preco = double.Parse(cotacaoAtivo, System.Globalization.CultureInfo.InvariantCulture);
-                ;
+                
             }
 
             Console.WriteLine("Ação:" + this.Preco.ToString());
             Console.WriteLine("mínimo:" + inf.ToString());
             Console.WriteLine("máximo:" + sup.ToString());
-
-
-            // Monitoramento se o ativo está maior ou menor que as cotas estipuladas
-
         }
 
         public bool AbaixoInf()
