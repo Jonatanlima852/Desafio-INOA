@@ -18,7 +18,7 @@ class Program
         string nomeArquivoConfig = "C:\\Users\\Jonatan\\source\\repos\\Desafio-INOA\\configuracao.json";
 
         string nomeAtivo = "EMBR3.SA";
-        double limiteInf = 17.0;
+        double limiteInf = 17.1;
         double limiteSup = 17.2;
         //string nomeArquivoConfig = args[0]; // O primeiro argumento é o nome do arquivo.
         //int limiteInf = int.Parse(args[1]); // O segundo argumento é o preço inferior
@@ -31,18 +31,20 @@ class Program
 
         while (true)
         {
-            if(ativo.AbaixoInf() || ativo.AcimaSup())
+            foreach (string email in sistemaEmail.EmailsDestino)
+            {
+                Console.WriteLine("Email de destino: " + email);
+            }
+
+            if (ativo.AbaixoInf() || ativo.AcimaSup())
             {
                 sistemaEmail.EnviarEmails(sistemaEmail.EmailsDestino);
             }
-            Thread.Sleep(60000 * 20); // Espera 20 minuto antes de verificar novamente
+            Thread.Sleep(60000); // Espera 1 minuto antes de verificar novamente
         }
 
 
         // Agora você pode acessar a propriedade EmailsDestino na instância leitor.
-        foreach (string email in sistemaEmail.EmailsDestino)
-        {
-            Console.WriteLine("Email de destino: " + email);
-        }
+        
     }
 }

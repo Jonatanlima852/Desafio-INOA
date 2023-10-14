@@ -65,6 +65,7 @@ namespace Desafio_INOA
         {
             foreach(string email in emails)
             {
+                Console.WriteLine($" enviando´email para {email}");
                 MailAddress fromAddress = new MailAddress(this.Usermame);
                 MailAddress toAddress = new MailAddress(email);
                 using (var message = new MailMessage(fromAddress, toAddress)
@@ -72,18 +73,22 @@ namespace Desafio_INOA
                     Subject = "Email teste",
                     Body = "Esse é um email teste",
                     IsBodyHtml = false
-
-
                 })
                 {
                     using (var newClient = new SmtpClient
                     {
+                        UseDefaultCredentials = false,
                         Credentials = this.client.Credentials,
                         Host = this.client.Host,
                         Port = this.client.Port,
                         EnableSsl = this.client.EnableSsl
                     })
                     {
+                        Console.WriteLine(this.client.Credentials);
+                        Console.WriteLine(this.client.Host);
+                        Console.WriteLine(this.client.Port);
+                        Console.WriteLine(this.client.EnableSsl);
+
                         newClient.Send(message);
                     }
                 }

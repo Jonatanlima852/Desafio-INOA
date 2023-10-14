@@ -20,23 +20,63 @@ namespace Desafio_INOA
             // Colocando os valores sup e inf no constructor 
             this.CotacaoInf = inf;
             this.CotacaoSup = sup;
-
             // Conexão com a API de monitoramento de ativos - 
 
-            string QUERY_URL = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=IBM&apikey=C2Q5WR4W8X2UJ4QT";
+            //string QUERY_URL = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol="+ ativo +"&apikey=C2Q5WR4W8X2UJ4QT";
+            string QUERY_URL = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=IBM&apikey=demo";
             Uri queryUri = new Uri(QUERY_URL);
 
-            string cotacaoAtivo = "";
 
             using (WebClient client = new WebClient())
             {
-                
+                //JavaScriptSerializer js = new JavaScriptSerializer();
+                //dynamic json_data = js.Deserialize(client.DownloadString(queryUri), typeof(object));
+
+                //Dictionary<string, object> json_data = JsonSerializer.Deserialize<Dictionary<string, dynamic>>(client.DownloadString(queryUri));
                 dynamic json_data = JsonSerializer.Deserialize<Dictionary<string, dynamic>>(client.DownloadString(queryUri));
+                Console.WriteLine("json data:" + json_data);
 
-                cotacaoAtivo += json_data.First["Global Quote"].First["05. price"].ToString();
+                //string cotacaoAtivo = json_data["Global Quote"]["05. price"];
 
-                Preco = Convert.ToDouble(cotacaoAtivo);
+                // if (json_data.TryGetValue("Global Quote", out var globalQuote) && globalQuote is Dictionary<string, object> globalQuoteDict)
+                // {
+                //    if (globalQuoteDict.TryGetValue("05. price", out var price))
+                //    {
+                //        if (price is string priceString)
+                //        {
+                //            string cotacaoAtivo = priceString;
+                //            // Agora você tem o valor da cotação em 'cotacaoAtivo'
+                //        }
+                //    }
+                //}
+
+                // Suponha que 'json_data' seja seu objeto dynamic
+                //string cotacaoAtivo = json_data["Global Quote"]["05. price"].ToString();
+                string cotacaoAtivo = json_data["Global Quote"].GetProperty("05. price").GetString();
+                // string cotacaoAtivo = json_data.GetProperty("Global Quote").GetProperty("05. price").GetString();
+
+                //Console.WriteLine(cotacaoAtivo); if (json_data.TryGetValue("Global Quote", out var globalQuote) && globalQuote is Dictionary<string, object> globalQuoteDict)
+                //{
+                //    if (globalQuoteDict.TryGetValue("05. price", out var price))
+                //    {
+                //        if (price is string priceString)
+                //        {
+                //            string cotacaoAtivo = priceString;
+                //            Console.WriteLine("Cotacao:" + cotacaoAtivo);
+                //            this.Preco = Convert.ToDouble(cotacaoAtivo);
+                //            // Agora você tem o valor da cotação em 'cotacaoAtivo'
+                //        }
+                //    }
+                //}
+
+                this.Preco = double.Parse(cotacaoAtivo, System.Globalization.CultureInfo.InvariantCulture);
+                ;
             }
+
+            Console.WriteLine("Ação:" + this.Preco.ToString());
+            Console.WriteLine("mínimo:" + inf.ToString());
+            Console.WriteLine("máximo:" + sup.ToString());
+
 
             // Monitoramento se o ativo está maior ou menor que as cotas estipuladas
 
