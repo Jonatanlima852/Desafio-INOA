@@ -21,8 +21,8 @@ class Program
         //double limiteSup = 17.2;
 
         string nomeAtivo = args[0]; // O primeiro argumento é o nome do ativo.
-        double limiteInf = double.Parse(args[1]); // O segundo argumento é o preço inferior
-        double limiteSup = double.Parse(args[2]); // O terceiro argumento é o preço superior
+        double limiteInf = double.Parse(args[1], System.Globalization.CultureInfo.InvariantCulture); ; // O segundo argumento é o preço inferior
+        double limiteSup = double.Parse(args[2], System.Globalization.CultureInfo.InvariantCulture); ; // O terceiro argumento é o preço superior
 
 
         // Criando uma instância de LeituraEmails passando o nome do arquivo de configuração. 
