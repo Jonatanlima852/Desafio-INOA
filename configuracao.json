@@ -1,9 +1,9 @@
 {
 	"Host": "smtp.gmail.com",
 	"Username": "jonatanlima852@gmail.com",
-	"Password": "gour zhvh jntn znuy",
+	"Password": "senhateste",
 	"Port": 587,
 	"Emails": [
-		"santosjonatan852@gmail.com",
+		"santosjonatan852@gmail.com"
 	]
 }
