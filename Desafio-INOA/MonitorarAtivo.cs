@@ -47,7 +47,7 @@ namespace Desafio_INOA
             Console.WriteLine("máximo:" + sup.ToString());
         }
 
-        public void AtualizarAtivo()
+        public void AtualizarAtivo(string ativo)
         {
 
             // Conexão com a API de monitoramento de ativos
