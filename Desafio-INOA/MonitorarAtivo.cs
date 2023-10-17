@@ -47,6 +47,32 @@ namespace Desafio_INOA
             Console.WriteLine("máximo:" + sup.ToString());
         }
 
+        public void AtualizarAtivo()
+        {
+
+            // Conexão com a API de monitoramento de ativos
+            string QUERY_URL = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=" + ativo + "&apikey=C2Q5WR4W8X2UJ4QT";
+
+            // Query teste a seguir, sem apiKey
+            //string QUERY_URL = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=IBM&apikey=demo";
+            Uri queryUri = new Uri(QUERY_URL);
+
+            using (WebClient client = new WebClient())
+            {
+                // Código obtido a partir do site da API.
+                // Site encontrado em:https://www.alphavantage.co/documentation/
+                dynamic json_data = JsonSerializer.Deserialize<Dictionary<string, dynamic>>(client.DownloadString(queryUri));
+
+                string cotacaoAtivo = json_data["Global Quote"].GetProperty("05. price").GetString();
+
+                // Transformando o texto para double independente da linguagem do visual studio (código obtido pelo chatGPT)
+                this.Preco = double.Parse(cotacaoAtivo, System.Globalization.CultureInfo.InvariantCulture);
+
+            }
+
+            Console.WriteLine("Ação:" + this.Preco.ToString());
+        }
+
         public bool AbaixoInf()
         {
             // Verifica se o ativo está abaixo do limite inferior estipulado

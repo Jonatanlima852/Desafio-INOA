@@ -35,6 +35,7 @@ class Program
 
         while (true)
         {
+            ativo.AtualizarAtivo();
             if (ativo.AbaixoInf())
             {
                 sistemaEmail.EnviarEmails(sistemaEmail.EmailsDestino, ativo.Preco, "comprar");
